@@ -53,7 +53,7 @@ static int		ft_init_itoa(int n, char **result)
 	if (n < 0)
 	{
 		negative = 1;
-		len ++;
+		len++;
 	}
 	while (n)
 	{

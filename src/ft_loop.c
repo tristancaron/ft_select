@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_loop.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tcaron <tcaron@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2014/01/06 17:09:57 by tcaron            #+#    #+#             */
+/*   Updated: 2014/01/06 17:09:58 by tcaron           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -23,7 +34,7 @@ static int		check_size(void)
 	return (0);
 }
 
-void				ft_loop_menu(t_line **array, int ac)
+void			ft_loop_menu(t_line **array, int ac)
 {
 	t_cursor	cursor;
 	char		buf[4];

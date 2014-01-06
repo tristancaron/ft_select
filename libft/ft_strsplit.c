@@ -89,7 +89,7 @@ void		ft_strsplit_write(char const *s, int nbr_of_word, char **result,
 				nbr_of_letter++;
 			}
 			result[s_nbr_of_word][nbr_of_letter] = '\0';
-			s_nbr_of_word += ( s_nbr_of_word < nbr_of_word) ? 1 : 0;
+			s_nbr_of_word += (s_nbr_of_word < nbr_of_word) ? 1 : 0;
 			nbr_of_letter = 0;
 		}
 		i++;

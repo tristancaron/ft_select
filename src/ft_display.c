@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_display.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tcaron <tcaron@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2014/01/06 17:07:12 by tcaron            #+#    #+#             */
+/*   Updated: 2014/01/06 17:07:13 by tcaron           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -8,7 +19,8 @@
 #include "header.h"
 #include "../libft/libft.h"
 
-static void		ft_move_cursor_column(int *count, int *y, int *step, int length)
+static void		ft_move_cursor_column(int *count, int *y,
+										int *step, int length)
 {
 	struct winsize	ws;
 
@@ -29,7 +41,8 @@ static void		ft_move_cursor_column(int *count, int *y, int *step, int length)
 	}
 }
 
-static void		ft_move_cursor(t_line **l, struct winsize *ws, int length, int ac)
+static void		ft_move_cursor(t_line **l, struct winsize *ws,
+								int length, int ac)
 {
 	static int	y = 0;
 	static int	count = 0;
@@ -51,7 +64,8 @@ static void		ft_move_cursor(t_line **l, struct winsize *ws, int length, int ac)
 	}
 }
 
-static void		ft_print_line(t_line **l, struct winsize *ws, int length, int ac)
+static void		ft_print_line(t_line **l, struct winsize *ws,
+								int length, int ac)
 {
 	int	fd_term;
 	int	i;
@@ -76,7 +90,7 @@ static void		ft_print_line(t_line **l, struct winsize *ws, int length, int ac)
 	else
 	{
 		ft_putstr_fd("Error with ft_print_line\n", 2);
-		exit (-1);
+		exit(-1);
 	}
 }
 
@@ -86,8 +100,8 @@ void		ft_print(t_line **l, int ac)
 	int				length;
 
 	ioctl(0, TIOCGWINSZ, &ws);
-	length = ft_strlen((*l)->line);
-	while(*l)
+	length = (int)ft_strlen((*l)->line);
+	while (*l)
 	{
 		ft_print_line(l, &ws, length, ac);
 		l++;

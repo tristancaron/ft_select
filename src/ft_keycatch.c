@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_keycatch.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tcaron <tcaron@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2014/01/06 17:09:04 by tcaron            #+#    #+#             */
+/*   Updated: 2014/01/06 17:09:04 by tcaron           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include <stdlib.h>
 #include <termcap.h>
@@ -5,7 +16,8 @@
 #include "../libft/libft.h"
 #include "header.h"
 
-static int	ft_arrow_input(char *buf, t_cursor *cursor, t_line **array, int *ac)
+static int	ft_arrow_input(char *buf, t_cursor *cursor,
+							t_line **array, int *ac)
 {
 	if (buf[0] == 0x1B && buf[1] == 0x5B && buf[2] == 0x42)
 	{
@@ -32,7 +44,8 @@ static int	ft_arrow_input(char *buf, t_cursor *cursor, t_line **array, int *ac)
 	return (0);
 }
 
-static int	ft_space_input(char *buf, t_cursor *cursor, t_line **array, int *ac)
+static int	ft_space_input(char *buf, t_cursor *cursor,
+							t_line **array, int *ac)
 {
 	if (buf[0] == ' ')
 	{
@@ -52,7 +65,8 @@ static int	ft_space_input(char *buf, t_cursor *cursor, t_line **array, int *ac)
 	return (0);
 }
 
-static int	ft_del_input(char *buf, t_cursor *cursor, t_line **array, int *ac)
+static int	ft_del_input(char *buf, t_cursor *cursor,
+							t_line **array, int *ac)
 {
 	if (buf[0] == 127 || buf[0] == 8)
 	{
@@ -81,28 +95,28 @@ static int	ft_del_input(char *buf, t_cursor *cursor, t_line **array, int *ac)
 	return (0);
 }
 
-static int	ft_enter_input(char *buf, t_line **array)
+static int	ft_enter_input(char *buf, t_line **array, int y, int i)
 {
-	int	i;
-
 	if (buf[0] == '\n')
 	{
 		ft_restore();
 		tputs(tgetstr("cl", NULL), 1, ft_putchar_term);
-		while (*array)
+		while (array[y])
 		{
 			i = 0;
-			if ((*array)->vid_rev == 1)
+			if (array[y]->vid_rev == 1)
 			{
-				while ((*array)->line[i] != ' ' && (*array)->line[i] != '\0')
+				while (array[y]->line[i] != ' ' && array[y]->line[i] != '\0')
 				{
-					ft_putchar_fd((*array)->line[i], 1);
+					ft_putchar_fd(array[y]->line[i], 1);
 					i++;
 				}
+				free(array[y]);
 				ft_putstr_fd(" ", 1);
 			}
-			array++;
+			y++;
 		}
+		free(array);
 		exit(1);
 	}
 	return (0);
@@ -116,7 +130,7 @@ int			ft_get_input(char *buf, t_cursor *cursor, t_line **array, int *ac)
 		return (1);
 	if (ft_del_input(buf, cursor, array, ac))
 		return (1);
-	if (ft_enter_input(buf, array))
+	if (ft_enter_input(buf, array, 0, 0))
 		return (1);
 	if (ft_esc_input(buf, array))
 		return (1);
