@@ -1,4 +1,11 @@
 
+#include <unistd.h>
+#include <stdlib.h>
+#include <termcap.h>
+#include <curses.h>
+#include <termios.h>
+#include <fcntl.h>
+#include "../libft/libft.h"
 #include "header.h"
 
 struct termios	g_oldline;

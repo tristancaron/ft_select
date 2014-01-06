@@ -1,5 +1,7 @@
 
 #include <stdlib.h>
+#include <termcap.h>
+#include <curses.h>
 #include "header.h"
 #include "../libft/libft.h"
 

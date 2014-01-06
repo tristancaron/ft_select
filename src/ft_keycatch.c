@@ -1,4 +1,8 @@
 
+#include <stdlib.h>
+#include <termcap.h>
+#include <curses.h>
+#include "../libft/libft.h"
 #include "header.h"
 
 static int	ft_arrow_input(char *buf, t_cursor *cursor, t_line **array, int *ac)
@@ -79,15 +83,22 @@ static int	ft_del_input(char *buf, t_cursor *cursor, t_line **array, int *ac)
 
 static int	ft_enter_input(char *buf, t_line **array)
 {
+	int	i;
+
 	if (buf[0] == '\n')
 	{
 		ft_restore();
 		tputs(tgetstr("cl", NULL), 1, ft_putchar_term);
 		while (*array)
 		{
+			i = 0;
 			if ((*array)->vid_rev == 1)
 			{
-				ft_putstr_fd((*array)->line, 1);
+				while ((*array)->line[i] != ' ' && (*array)->line[i] != '\0')
+				{
+					ft_putchar_fd((*array)->line[i], 1);
+					i++;
+				}
 				ft_putstr_fd(" ", 1);
 			}
 			array++;

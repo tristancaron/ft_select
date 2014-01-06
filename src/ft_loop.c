@@ -1,4 +1,10 @@
 
+#include <unistd.h>
+#include <fcntl.h>
+#include <termcap.h>
+#include <curses.h>
+#include <sys/ioctl.h>
+#include "../libft/libft.h"
 #include "header.h"
 
 static int		check_size(void)

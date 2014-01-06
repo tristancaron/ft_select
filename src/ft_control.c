@@ -1,4 +1,10 @@
 
+#include <unistd.h>
+#include <termcap.h>
+#include <curses.h>
+#include <signal.h>
+#include <stdlib.h>
+#include "../libft/libft.h"
 #include "header.h"
 
 static void		sigint_win(int sig)
