@@ -13,7 +13,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <termcap.h>
-#include <curses.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include "header.h"
@@ -24,7 +23,8 @@ static void		ft_move_cursor_column(int *count, int *y,
 {
 	struct winsize	ws;
 
-	ioctl(0, TIOCGWINSZ, &ws);
+	if (ioctl(0, TIOCGWINSZ, &ws) == -1)
+		ft_putstr_fd("Error in ft_move_cursor_column\n", 2);
 	if (*count < ws.ws_row - 1)
 	{
 		(*count)++;
@@ -64,6 +64,26 @@ static void		ft_move_cursor(t_line **l, struct winsize *ws,
 	}
 }
 
+static void		ft_print_in_line(t_line **l, int fd)
+{
+	int	i;
+	int	k;
+
+	i = 0;
+	while((*l)->line[i] != '\0')
+	{
+		if ((*l)->line[i] != ' ')
+			k = i;
+		i++;
+	}
+	i = 0;
+	while (i <= k && (*l)->line[i] != '\0')
+	{
+		ft_putchar_fd((*l)->line[i], fd);
+		i++;
+	}
+}
+
 static void		ft_print_line(t_line **l, struct winsize *ws,
 								int length, int ac)
 {
@@ -78,11 +98,7 @@ static void		ft_print_line(t_line **l, struct winsize *ws,
 			ft_putstr_fd(ANSI_UL, fd_term);
 		if ((*l)->vid_rev)
 			ft_putstr_fd(ANSI_VR, fd_term);
-		while ((*l)->line[i] != ' ' && (*l)->line[i] != '\0')
-		{
-			ft_putchar_fd((*l)->line[i], fd_term);
-			i++;
-		}
+		ft_print_in_line(l, fd_term);
 		ft_putstr_fd(ANSI_RESET, fd_term);
 		ft_move_cursor(l, ws, length, ac);
 		close(fd_term);
@@ -94,12 +110,13 @@ static void		ft_print_line(t_line **l, struct winsize *ws,
 	}
 }
 
-void		ft_print(t_line **l, int ac)
+void			ft_print(t_line **l, int ac)
 {
 	struct winsize	ws;
 	int				length;
 
-	ioctl(0, TIOCGWINSZ, &ws);
+	if (ioctl(0, TIOCGWINSZ, &ws) == -1)
+		ft_putstr_fd("Error in ft_print\n", 2);
 	length = (int)ft_strlen((*l)->line);
 	while (*l)
 	{

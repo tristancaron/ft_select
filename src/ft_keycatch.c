@@ -12,14 +12,13 @@
 
 #include <stdlib.h>
 #include <termcap.h>
-#include <curses.h>
 #include "../libft/libft.h"
 #include "header.h"
 
 static int	ft_arrow_input(char *buf, t_cursor *cursor,
 							t_line **array, int *ac)
 {
-	if (buf[0] == 0x1B && buf[1] == 0x5B && buf[2] == 0x42)
+	if (buf[0] == 0x1B && buf[1] == 0x5B && buf[2] == 0x42 && !buf[3])
 	{
 		array[cursor->pos]->underline = 0;
 		if (cursor->pos > *ac - 3)
@@ -30,7 +29,7 @@ static int	ft_arrow_input(char *buf, t_cursor *cursor,
 		cursor->check = 1;
 		return (1);
 	}
-	else if (buf[0] == 0x1B && buf[1] == 0x5B && buf[2] == 0x41)
+	else if (buf[0] == 0x1B && buf[1] == 0x5B && buf[2] == 0x41 && !buf[3])
 	{
 		array[cursor->pos]->underline = 0;
 		if (!cursor->pos)
@@ -47,7 +46,7 @@ static int	ft_arrow_input(char *buf, t_cursor *cursor,
 static int	ft_space_input(char *buf, t_cursor *cursor,
 							t_line **array, int *ac)
 {
-	if (buf[0] == ' ')
+	if (buf[0] == ' ' && !buf[1])
 	{
 		if (array[cursor->pos]->vid_rev == 1)
 			array[cursor->pos]->vid_rev = 0;
@@ -68,7 +67,7 @@ static int	ft_space_input(char *buf, t_cursor *cursor,
 static int	ft_del_input(char *buf, t_cursor *cursor,
 							t_line **array, int *ac)
 {
-	if (buf[0] == 127 || buf[0] == 8)
+	if (ft_check_del(buf))
 	{
 		array[cursor->pos]->underline = 0;
 		while (array[cursor->pos + 1])
@@ -97,7 +96,7 @@ static int	ft_del_input(char *buf, t_cursor *cursor,
 
 static int	ft_enter_input(char *buf, t_line **array, int y, int i)
 {
-	if (buf[0] == '\n')
+	if (buf[0] == '\n' && !buf[1])
 	{
 		ft_restore();
 		tputs(tgetstr("cl", NULL), 1, ft_putchar_term);

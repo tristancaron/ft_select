@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "header.h"
+#include "../libft/libft.h"
 #include <stdlib.h>
 
 static t_line	*ft_init_line(char *line, int vid_rev, int underline)
@@ -18,6 +19,11 @@ static t_line	*ft_init_line(char *line, int vid_rev, int underline)
 	t_line	*result;
 
 	result = (t_line *)malloc(sizeof(t_line));
+	if (!result)
+	{
+		ft_putstr_fd("Error inr ft_init_line\n", 2);
+		return (NULL);
+	}
 	result->line = line;
 	result->vid_rev = vid_rev;
 	result->underline = underline;
@@ -30,7 +36,12 @@ t_line			**ft_get_line(int ac, char **av)
 	int			i;
 
 	i = 0;
-	result = (t_line **)malloc(ac * sizeof(t_line *));
+	result = (t_line **)malloc((unsigned long)ac * sizeof(t_line *));
+	if (!result)
+	{
+		ft_putstr_fd("Error inr ft_get_line\n", 2);
+		return (NULL);
+	}
 	result[ac - 1] = NULL;
 	while (i < ac - 1)
 	{

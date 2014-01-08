@@ -64,26 +64,18 @@ static int		ft_next(int ac, char **av)
 int				main(int ac, char **av)
 {
 	char	*term;
-	char	*bp;
 
-	bp = (char *)malloc(sizeof(char) * BUFF_SIZE);
-	if (!bp)
-	{
-		ft_putstr_fd("Error with malloc\n", 2);
-		return (-1);
-	}
 	if ((term = getenv("TERM")) == NULL)
 	{
 		ft_putstr_fd("Error with getenv\n", 2);
 		return (-1);
 	}
-	if (tgetent(bp, term) != 1)
+	if (tgetent(NULL, term) != 1)
 	{
 		ft_putstr_fd("Error with tgetent\n", 2);
 		return (-1);
 	}
 	ft_signal();
-	free(bp);
 	ft_next(ac, av);
 	return (0);
 }

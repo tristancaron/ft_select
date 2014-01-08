@@ -13,7 +13,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <termcap.h>
-#include <curses.h>
 #include <sys/ioctl.h>
 #include "../libft/libft.h"
 #include "header.h"
@@ -24,7 +23,8 @@ static int		check_size(void)
 	static unsigned short	width = 0;
 	static unsigned short	height = 0;
 
-	ioctl(0, TIOCGWINSZ, &ws);
+	if (ioctl(0, TIOCGWINSZ, &ws) == -1)
+		ft_putstr_fd("Error in check_size\n", 2);
 	if (ws.ws_col != width || ws.ws_row != height)
 	{
 		width = ws.ws_col;
@@ -37,7 +37,7 @@ static int		check_size(void)
 void			ft_loop_menu(t_line **array, int ac)
 {
 	t_cursor	cursor;
-	char		buf[4];
+	char		buf[5];
 	int			ret;
 	char		*path;
 
@@ -51,7 +51,7 @@ void			ft_loop_menu(t_line **array, int ac)
 			ft_print(array, ac);
 		}
 		path = ttyname(0);
-		if ((ret = (int)read(0, buf, 3)) == -1)
+		if ((ret = (int)read(0, buf, 4)) == -1)
 		{
 			if (isatty(0) == 0)
 				open(path, O_RDWR);

@@ -13,7 +13,6 @@
 #ifndef HEADER_H
 # define HEADER_H
 
-# define BUFF_SIZE 5024
 # define ANSI_VR "\033[7m"
 # define ANSI_UL "\033[4m"
 # define ANSI_RESET "\033[0m"
@@ -41,5 +40,6 @@ int				ft_get_input(char *buf, t_cursor *cursor,
 								t_line **array, int *ac);
 void			ft_signal(void);
 int				ft_esc_input(char *buf, t_line **array);
+int				ft_check_del(char *buf);
 
 #endif /* !HEADER_H */

@@ -13,7 +13,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <termcap.h>
-#include <curses.h>
 #include <termios.h>
 #include <fcntl.h>
 #include "../libft/libft.h"
@@ -26,6 +25,8 @@ struct termios	*ft_oldline(struct termios *line)
 	if (oldline == NULL)
 	{
 		oldline = (struct termios *)malloc(sizeof(line));
+		if (!oldline)
+			ft_putstr_fd("Error in ft_oldline\n", 2);
 		oldline = line;
 		return (line);
 	}
@@ -38,7 +39,7 @@ int				ft_putchar_term(int c)
 	int		fd_term;
 
 	fd_term = open("/dev/tty", O_RDWR);
-	if (fd_term < 0)
+	if (fd_term)
 	{
 		write(fd_term, &c, 1);
 		close(fd_term);
@@ -58,6 +59,8 @@ int				ft_restore(void)
 	struct termios	*oldline;
 
 	oldline = (struct termios *)malloc(sizeof(line));
+	if (!oldline)
+		ft_putstr_fd("Error in ft_restore\n", 2);
 	oldline = ft_oldline(NULL);
 	if (tcsetattr(0, TCSANOW, oldline) < 0)
 		ft_putstr_fd("Error with ft_restore\n", 2);
@@ -71,11 +74,13 @@ int				ft_non_canonical(void)
 	struct termios	*oldline;
 
 	oldline = (struct termios *)malloc(sizeof(line));
+	if (!oldline)
+		ft_putstr_fd("Error in ft_non_canonical\n", 2);
 	if (tcgetattr(0, oldline) < 0)
 		ft_putstr_fd("Error with ft_canonical_mode (1)\n", 2);
 	oldline = ft_oldline(oldline);
-	ft_memcpy(&line, oldline, sizeof(line));
-	line.c_lflag &= ~(ICANON|ECHO);
+	ft_memmove(&line, oldline, sizeof(line));
+	line.c_lflag &= ~(unsigned long)(ICANON|ECHO);
 	line.c_cc[VMIN] = 1;
 	line.c_cc[VTIME] = 0;
 	if (tcsetattr(0, TCSANOW, &line) < 0)
