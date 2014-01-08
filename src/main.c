@@ -16,7 +16,7 @@
 #include "header.h"
 #include "../libft/libft.h"
 
-static void		ft_init_column(char **av)
+static void		ft_init_column(char **av, int *size)
 {
 	int		i;
 	int		max;
@@ -26,14 +26,14 @@ static void		ft_init_column(char **av)
 	max = 0;
 	while (av[i])
 	{
-		if (max < (int)ft_strlen(av[i]))
-			max = (int)ft_strlen(av[i]);
+		if (max < (size[i - 1] = (int)ft_strlen(av[i])))
+			max = size[i - 1];
 		i++;
 	}
 	i = 1;
 	while (av[i])
 	{
-		if ((apply = (int)ft_strlen(av[i])) < max)
+		if ((apply = size[i - 1]) < max)
 		{
 			while (apply < max)
 			{
@@ -48,14 +48,16 @@ static void		ft_init_column(char **av)
 static int		ft_next(int ac, char **av)
 {
 	t_line		**array;
+	int			*size;
 
 	if (ac == 1)
 	{
 		ft_putstr_fd("No args found\n", 2);
 		return (-1);
 	}
-	ft_init_column(av);
-	array = ft_get_line(ac, av);
+	size = (int *)malloc((unsigned long)ac * sizeof(int));
+	ft_init_column(av, size);
+	array = ft_get_line(ac, av, size);
 	ft_non_canonical();
 	ft_loop_menu(array, ac);
 	return (0);

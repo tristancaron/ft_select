@@ -33,14 +33,13 @@ int	ft_esc_input(char *buf, t_line **array)
 	{
 		i = 0;
 		ft_restore();
-		tputs(tgetstr("cl", NULL), 1, ft_putchar_term);
 		while (array[i])
 		{
 			free(array[i]);
 			i++;
 		}
 		free(array);
-		exit(1);
+		exit(0);
 	}
 	return (0);
 }

@@ -43,15 +43,13 @@ void			ft_loop_menu(t_line **array, int ac)
 
 	cursor.pos = 0;
 	cursor.check = 0;
+	tputs(tgetstr("cl", NULL), 1, ft_putchar_term);
 	while (1)
 	{
 		if (cursor.check || check_size())
-		{
-			tputs(tgetstr("cl", NULL), 1, ft_putchar_term);
 			ft_print(array, ac);
-		}
 		path = ttyname(0);
-		if ((ret = (int)read(0, buf, 4)) == -1)
+		if ((ret = (int)read(0, buf, (unsigned long)4)) == -1)
 		{
 			if (isatty(0) == 0)
 				open(path, O_RDWR);

@@ -14,7 +14,7 @@
 #include "../libft/libft.h"
 #include <stdlib.h>
 
-static t_line	*ft_init_line(char *line, int vid_rev, int underline)
+static t_line	*ft_init_line(char *line, int vid_rev, int underline, int len)
 {
 	t_line	*result;
 
@@ -27,10 +27,11 @@ static t_line	*ft_init_line(char *line, int vid_rev, int underline)
 	result->line = line;
 	result->vid_rev = vid_rev;
 	result->underline = underline;
+	result->size = len;
 	return (result);
 }
 
-t_line			**ft_get_line(int ac, char **av)
+t_line			**ft_get_line(int ac, char **av, int *size)
 {
 	t_line		**result;
 	int			i;
@@ -46,9 +47,9 @@ t_line			**ft_get_line(int ac, char **av)
 	while (i < ac - 1)
 	{
 		if (i == 0)
-			result[i] = ft_init_line(av[i + 1], 0, 1);
+			result[i] = ft_init_line(av[i + 1], 0, 1, size[i]);
 		else
-			result[i] = ft_init_line(av[i + 1], 0, 0);
+			result[i] = ft_init_line(av[i + 1], 0, 0, size[i]);
 		i++;
 	}
 	return (result);

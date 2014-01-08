@@ -27,8 +27,6 @@ static void		sigint_ctrlc(int sig)
 {
 	ft_restore();
 	sig = 0;
-	tputs(tgetstr("cl", NULL), 1, ft_putchar_term);
-	tputs(tgetstr("ve", NULL), 1, ft_putchar_term);
 	exit(0);
 }
 
@@ -36,7 +34,6 @@ static void		sigint_cont(int sig)
 {
 	ft_non_canonical();
 	tputs(tgetstr("cl", NULL), 1, ft_putchar_term);
-	tputs(tgetstr("vi", NULL), 1, ft_putchar_term);
 	sig = 0;
 	close(0);
 }

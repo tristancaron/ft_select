@@ -22,6 +22,8 @@ SRC = $(addprefix src/, $(FILES))
 
 OBJ = $(SRC:src/%.c=obj/%.o)
 
+CC = gcc
+
 .PHONY: all clean fclean re dirobj
 
 .SILENT: dirobj

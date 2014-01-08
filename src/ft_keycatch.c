@@ -12,6 +12,7 @@
 
 #include <stdlib.h>
 #include <termcap.h>
+#include <unistd.h>
 #include "../libft/libft.h"
 #include "header.h"
 
@@ -67,9 +68,11 @@ static int	ft_space_input(char *buf, t_cursor *cursor,
 static int	ft_del_input(char *buf, t_cursor *cursor,
 							t_line **array, int *ac)
 {
+	int	s;
+
+	s = cursor->pos;
 	if (ft_check_del(buf))
 	{
-		array[cursor->pos]->underline = 0;
 		while (array[cursor->pos + 1])
 		{
 			array[cursor->pos] = array[cursor->pos + 1];
@@ -82,10 +85,8 @@ static int	ft_del_input(char *buf, t_cursor *cursor,
 			buf[0] = 27;
 			ft_esc_input(buf, array);
 		}
-		cursor->pos--;
-		if (cursor->pos > *ac - 3)
-			cursor->pos = 0;
-		else
+		cursor->pos = s - 1;
+		if (cursor->pos <= *ac - 3)
 			cursor->pos += 1;
 		array[cursor->pos]->underline = 1;
 		cursor->check = 1;
@@ -99,24 +100,19 @@ static int	ft_enter_input(char *buf, t_line **array, int y, int i)
 	if (buf[0] == '\n' && !buf[1])
 	{
 		ft_restore();
-		tputs(tgetstr("cl", NULL), 1, ft_putchar_term);
 		while (array[y])
 		{
 			i = 0;
 			if (array[y]->vid_rev == 1)
 			{
-				while (array[y]->line[i] != ' ' && array[y]->line[i] != '\0')
-				{
-					ft_putchar_fd(array[y]->line[i], 1);
-					i++;
-				}
+				write(1, array[y]->line, (unsigned long)array[y]->size);
 				free(array[y]);
 				ft_putstr_fd(" ", 1);
 			}
 			y++;
 		}
 		free(array);
-		exit(1);
+		exit(0);
 	}
 	return (0);
 }

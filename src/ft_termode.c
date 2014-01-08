@@ -41,16 +41,16 @@ int				ft_putchar_term(int c)
 	fd_term = open("/dev/tty", O_RDWR);
 	if (fd_term)
 	{
-		write(fd_term, &c, 1);
+		write(fd_term, &c, (unsigned long)1);
 		close(fd_term);
-		return (1);
+		return (c);
 	}
 	else
 	{
 		ft_restore();
-		exit(-1);
+		exit(0);
 	}
-	return (1);
+	return (c);
 }
 
 int				ft_restore(void)
@@ -65,6 +65,7 @@ int				ft_restore(void)
 	if (tcsetattr(0, TCSANOW, oldline) < 0)
 		ft_putstr_fd("Error with ft_restore\n", 2);
 	tputs(tgetstr("ve", NULL), 1, ft_putchar_term);
+	tputs(tgetstr("te", NULL), 1, ft_putchar_term);
 	return (1);
 }
 
@@ -86,5 +87,6 @@ int				ft_non_canonical(void)
 	if (tcsetattr(0, TCSANOW, &line) < 0)
 		ft_putstr_fd("Error with ft_canonical_mode (2)\n", 2);
 	tputs(tgetstr("vi", NULL), 1, ft_putchar_term);
+	tputs(tgetstr("ti", NULL), 1, ft_putchar_term);
 	return (1);
 }

@@ -64,26 +64,6 @@ static void		ft_move_cursor(t_line **l, struct winsize *ws,
 	}
 }
 
-static void		ft_print_in_line(t_line **l, int fd)
-{
-	int	i;
-	int	k;
-
-	i = 0;
-	while((*l)->line[i] != '\0')
-	{
-		if ((*l)->line[i] != ' ')
-			k = i;
-		i++;
-	}
-	i = 0;
-	while (i <= k && (*l)->line[i] != '\0')
-	{
-		ft_putchar_fd((*l)->line[i], fd);
-		i++;
-	}
-}
-
 static void		ft_print_line(t_line **l, struct winsize *ws,
 								int length, int ac)
 {
@@ -98,7 +78,7 @@ static void		ft_print_line(t_line **l, struct winsize *ws,
 			ft_putstr_fd(ANSI_UL, fd_term);
 		if ((*l)->vid_rev)
 			ft_putstr_fd(ANSI_VR, fd_term);
-		ft_print_in_line(l, fd_term);
+		write(fd_term, &(*l)->line[i], (unsigned long)(*l)->size);
 		ft_putstr_fd(ANSI_RESET, fd_term);
 		ft_move_cursor(l, ws, length, ac);
 		close(fd_term);
@@ -106,7 +86,7 @@ static void		ft_print_line(t_line **l, struct winsize *ws,
 	else
 	{
 		ft_putstr_fd("Error with ft_print_line\n", 2);
-		exit(-1);
+		exit(0);
 	}
 }
 
@@ -120,7 +100,10 @@ void			ft_print(t_line **l, int ac)
 	length = (int)ft_strlen((*l)->line);
 	while (*l)
 	{
+		tputs(tgetstr("ce", NULL), 1, ft_putchar_term);
 		ft_print_line(l, &ws, length, ac);
 		l++;
 	}
+	tputs(tgetstr("ce", NULL), 1, ft_putchar_term);
+	tputs(tgoto(tgetstr("cm", NULL), 0, 0), 1, ft_putchar_term);
 }

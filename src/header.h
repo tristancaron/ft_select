@@ -22,6 +22,7 @@ typedef struct	s_line
 	char		*line;
 	int			vid_rev;
 	int			underline;
+	int			size;
 }				t_line;
 
 typedef struct	s_cursor
@@ -30,7 +31,7 @@ typedef struct	s_cursor
 	int			check;
 }				t_cursor;
 
-t_line			**ft_get_line(int ac, char **av);
+t_line			**ft_get_line(int ac, char **av, int *size);
 int				ft_non_canonical(void);
 int				ft_restore(void);
 int				ft_putchar_term(int c);
