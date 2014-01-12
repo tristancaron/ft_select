@@ -49,12 +49,15 @@ static void		sigint_ctrlc(int sig)
 
 static void		sigint_ctrlz(int sig)
 {
-	ft_restore();
-	sig = 0;
-	signal(SIGWINCH, SIG_DFL);
-	signal(SIGTSTP, SIG_DFL);
-	signal(SIGINT, SIG_DFL);
-	ioctl(0, TIOCSTI, "\032");
+	if (isatty(1) == 1)
+	{
+		ft_restore();
+		sig = 0;
+		signal(SIGWINCH, SIG_DFL);
+		signal(SIGTSTP, SIG_DFL);
+		signal(SIGINT, SIG_DFL);
+		ioctl(0, TIOCSTI, "\032");
+	}
 }
 
 static void		sigint_cont(int sig)

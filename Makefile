@@ -33,7 +33,7 @@ all: dirobj $(NAME)
 
 $(NAME): $(OBJ)
 		make -C ./libft
-		$(CC) -L./libft -lft -lcurses -ltermcap -o $(NAME) $(OBJ)
+		$(CC) -L./libft -lft -ltermcap -o $(NAME) $(OBJ)
 
 obj/%.o : src/%.c
 		$(CC) $(CFLAGS) -Iinc -I./libft -o $@ -c $^
