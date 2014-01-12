@@ -72,4 +72,5 @@ void			ft_signal(void)
 	signal(SIGTSTP, sigint_ctrlz);
 	signal(SIGINT, sigint_ctrlc);
 	signal(SIGCONT, sigint_cont);
+	signal(SIGTTIN, sigint_ctrlc);
 }
