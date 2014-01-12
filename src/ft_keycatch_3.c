@@ -103,7 +103,7 @@ int				ft_del_input(char *buf, t_cursor *cursor,
 		if (*ac == 1)
 			ft_generate_esc(buf, array);
 		cursor->pos = (s == 0) ? s : s - 1;
-		if (ft_is_search(0, 0))
+		if (ft_is_search(0, 0) && !ft_no_found(array))
 		{
 			cursor->pos = (s + 1 < *ac) ? s : s - 1;
 			ft_reshow_c(cursor, array, *ac);

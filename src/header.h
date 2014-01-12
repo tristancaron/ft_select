@@ -88,5 +88,6 @@ int				ft_check_show(t_line **l, int *ac, struct winsize *ws);
 void			ft_is_hightlight(t_line **l);
 int				ft_move_cursor(t_line **l, struct winsize *ws, int ac,
 								int word);
+int				ft_no_found(t_line **l);
 
 #endif /* !HEADER_H */

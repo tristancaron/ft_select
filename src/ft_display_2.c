@@ -128,9 +128,9 @@ void			ft_is_hightlight(t_line **l)
 
 	i = 0;
 	word = ft_is_search(0, 0);
-	while ((*l)->line[i])
+	while (i < (*l)->size)
 	{
-		if (word && *word == (*l)->line[i])
+		if (word && (ft_strncmp(word, &(*l)->line[i], ft_strlen(word)) == 0))
 		{
 			ft_putstr_fd(BOLD, ft_open_call());
 			word++;

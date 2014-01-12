@@ -34,7 +34,7 @@ static int		check_size(void)
 	return (0);
 }
 
-static int		ft_no_found(t_line **l)
+int				ft_no_found(t_line **l)
 {
 	while (*l)
 	{
