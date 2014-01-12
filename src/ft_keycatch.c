@@ -16,85 +16,6 @@
 #include "../libft/libft.h"
 #include "header.h"
 
-static int	ft_arrow_input(char *buf, t_cursor *cursor,
-							t_line **array, int *ac)
-{
-	if (buf[0] == 0x1B && buf[1] == 0x5B && buf[2] == 0x42 && !buf[3])
-	{
-		array[cursor->pos]->underline = 0;
-		if (cursor->pos > *ac - 3)
-			cursor->pos = 0;
-		else
-			cursor->pos += 1;
-		array[cursor->pos]->underline = 1;
-		cursor->check = 1;
-		return (1);
-	}
-	else if (buf[0] == 0x1B && buf[1] == 0x5B && buf[2] == 0x41 && !buf[3])
-	{
-		array[cursor->pos]->underline = 0;
-		if (!cursor->pos)
-			cursor->pos = *ac - 2;
-		else
-			cursor->pos -= 1;
-		array[cursor->pos]->underline = 1;
-		cursor->check = 1;
-		return (1);
-	}
-	return (0);
-}
-
-static int	ft_space_input(char *buf, t_cursor *cursor,
-							t_line **array, int *ac)
-{
-	if (buf[0] == ' ' && !buf[1])
-	{
-		if (array[cursor->pos]->vid_rev == 1)
-			array[cursor->pos]->vid_rev = 0;
-		else
-			array[cursor->pos]->vid_rev = 1;
-		array[cursor->pos]->underline = 0;
-		if (cursor->pos > *ac - 3)
-			cursor->pos = 0;
-		else
-			cursor->pos += 1;
-		array[cursor->pos]->underline = 1;
-		cursor->check = 1;
-		return (1);
-	}
-	return (0);
-}
-
-static int	ft_del_input(char *buf, t_cursor *cursor,
-							t_line **array, int *ac)
-{
-	int	s;
-
-	s = cursor->pos;
-	if (ft_check_del(buf))
-	{
-		while (array[cursor->pos + 1])
-		{
-			array[cursor->pos] = array[cursor->pos + 1];
-			cursor->pos++;
-		}
-		array[cursor->pos] = NULL;
-		(*ac)--;
-		if (*ac == 1)
-		{
-			buf[0] = 27;
-			ft_esc_input(buf, array);
-		}
-		cursor->pos = s - 1;
-		if (cursor->pos <= *ac - 3)
-			cursor->pos += 1;
-		array[cursor->pos]->underline = 1;
-		cursor->check = 1;
-		return (1);
-	}
-	return (0);
-}
-
 static int	ft_enter_input(char *buf, t_line **array, int y, int i)
 {
 	if (buf[0] == '\n' && !buf[1])
@@ -112,7 +33,51 @@ static int	ft_enter_input(char *buf, t_line **array, int y, int i)
 			y++;
 		}
 		free(array);
+		while (ft_is_search(0, 0))
+			ft_is_search(0, 1);
+		close(ft_open_call());
 		exit(0);
+	}
+	return (0);
+}
+
+
+char		*ft_is_search(char *c, int check)
+{
+	static char	*word = NULL;
+	int			len;
+
+	if (check)
+	{
+		if ((len = (int)ft_strlen(word)) > 1)
+		{
+			word[len - 1] = '\0';
+			return (word);
+		}
+		free(word);
+		word = NULL;
+		return (NULL);
+	}
+	else if (c && !word)
+	{
+		word = (char *)malloc(sizeof(char) + 1);
+		return ((word = ft_strjoin(word, c)));
+	}
+	else if (!c && word)
+		return (word);
+	else if (c && word)
+		return ((word = ft_strjoin(word, c)));
+	else
+		return (NULL);
+}
+
+static int	ft_get_search(char *buf)
+{
+	if (buf[0] >= 33 && buf[0] <= 126)
+	{
+		ft_is_search(buf, 0);
+		ft_check_cursor(1);
+		return (1);
 	}
 	return (0);
 }
@@ -121,13 +86,26 @@ int			ft_get_input(char *buf, t_cursor *cursor, t_line **array, int *ac)
 {
 	if (ft_arrow_input(buf, cursor, array, ac) && *ac > 1)
 		return (1);
+	if (ft_arrow_input_col(buf, cursor, array, ac) && *ac > 1)
+		return (1);
 	if (ft_space_input(buf, cursor, array, ac))
 		return (1);
 	if (ft_del_input(buf, cursor, array, ac))
+	{
+		cursor->check = 1;
 		return (1);
+	}
 	if (ft_enter_input(buf, array, 0, 0))
 		return (1);
-	if (ft_esc_input(buf, array))
+	if (ft_get_search(buf))
+	{
+		cursor->check = 1;
 		return (1);
+	}
+	if (ft_esc_input(buf, array))
+	{
+		cursor->check = 1;
+		return (1);
+	}
 	return (0);
 }

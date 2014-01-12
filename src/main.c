@@ -20,7 +20,6 @@ static void		ft_init_column(char **av, int *size)
 {
 	int		i;
 	int		max;
-	int		apply;
 
 	i = 1;
 	max = 0;
@@ -30,19 +29,15 @@ static void		ft_init_column(char **av, int *size)
 			max = size[i - 1];
 		i++;
 	}
-	i = 1;
-	while (av[i])
-	{
-		if ((apply = size[i - 1]) < max)
-		{
-			while (apply < max)
-			{
-				av[i] = ft_strjoin(av[i], " ");
-				apply++;
-			}
-		}
-		i++;
-	}
+}
+
+t_line			**ft_get_array(t_line **array)
+{
+	static t_line	**sa_array = NULL;
+
+	if (array)
+		sa_array = array;
+	return (sa_array);
 }
 
 static int		ft_next(int ac, char **av)
@@ -58,6 +53,7 @@ static int		ft_next(int ac, char **av)
 	size = (int *)malloc((unsigned long)ac * sizeof(int));
 	ft_init_column(av, size);
 	array = ft_get_line(ac, av, size);
+	ft_get_array(array);
 	ft_non_canonical();
 	ft_loop_menu(array, ac);
 	return (0);

@@ -18,9 +18,27 @@
 #include "../libft/libft.h"
 #include "header.h"
 
-struct termios	*ft_oldline(struct termios *line)
+int					ft_open_call(void)
 {
-	static struct termios *oldline = NULL;
+	static int	fd = 0;
+	static int	check = 0;
+
+	if (check == 0)
+	{
+		check++;
+		fd = open("/dev/tty", O_RDWR);
+		if (fd)
+			return (fd);
+		ft_putstr_fd("Error with ft_call_open\n", 2);
+		return (0);
+	}
+	else
+		return (fd);
+}
+
+struct termios		*ft_oldline(struct termios *line)
+{
+	static struct termios	*oldline = NULL;
 
 	if (oldline == NULL)
 	{
@@ -34,15 +52,14 @@ struct termios	*ft_oldline(struct termios *line)
 		return (oldline);
 }
 
-int				ft_putchar_term(int c)
+int					ft_putchar_term(int c)
 {
 	int		fd_term;
 
-	fd_term = open("/dev/tty", O_RDWR);
+	fd_term = ft_open_call();
 	if (fd_term)
 	{
 		write(fd_term, &c, (unsigned long)1);
-		close(fd_term);
 		return (c);
 	}
 	else
@@ -53,7 +70,7 @@ int				ft_putchar_term(int c)
 	return (c);
 }
 
-int				ft_restore(void)
+int					ft_restore(void)
 {
 	struct termios	line;
 	struct termios	*oldline;
@@ -61,7 +78,7 @@ int				ft_restore(void)
 	oldline = (struct termios *)malloc(sizeof(line));
 	if (!oldline)
 		ft_putstr_fd("Error in ft_restore\n", 2);
-	oldline = ft_oldline(NULL);
+	oldline = ft_oldline(oldline);
 	if (tcsetattr(0, TCSANOW, oldline) < 0)
 		ft_putstr_fd("Error with ft_restore\n", 2);
 	tputs(tgetstr("ve", NULL), 1, ft_putchar_term);
@@ -69,7 +86,7 @@ int				ft_restore(void)
 	return (1);
 }
 
-int				ft_non_canonical(void)
+int					ft_non_canonical(void)
 {
 	struct termios	line;
 	struct termios	*oldline;

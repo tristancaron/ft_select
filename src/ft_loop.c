@@ -34,29 +34,53 @@ static int		check_size(void)
 	return (0);
 }
 
-void			ft_loop_menu(t_line **array, int ac)
+static int		ft_no_found(t_line **l)
 {
-	t_cursor	cursor;
-	char		buf[5];
-	int			ret;
-	char		*path;
+	while (*l)
+	{
+		if ((*l)->show == 1)
+			return (0);
+		l++;
+	}
+	return (1);
+}
 
-	cursor.pos = 0;
-	cursor.check = 0;
-	tputs(tgetstr("cl", NULL), 1, ft_putchar_term);
+void			ft_do_loop(t_line **array, t_cursor *cursor, int ac, char *path)
+{
+	char	buf[5];
+	int		ret;
+
 	while (1)
 	{
-		if (cursor.check || check_size())
-			ft_print(array, ac);
-		path = ttyname(0);
+		while (cursor->check-- >= 0|| check_size())
+			ft_print(array, ac, cursor);
+		if (ft_check_cursor(0))
+		{
+			if (ft_no_found(array))
+				continue ;
+			ft_reshow_c(cursor, array, ac);
+			ft_print(array, ac, cursor);
+		}
 		if ((ret = (int)read(0, buf, (unsigned long)4)) == -1)
 		{
 			if (isatty(0) == 0)
 				open(path, O_RDWR);
-			cursor.check = 1;
+			cursor->check = 1;
 			continue ;
 		}
 		buf[ret] = '\0';
-		ft_get_input(buf, &cursor, array, &ac);
+		ft_get_input(buf, cursor, array, &ac);
 	}
+}
+
+void			ft_loop_menu(t_line **array, int ac)
+{
+	t_cursor	cursor;
+	char		*path;
+
+	cursor.pos = 0;
+	cursor.check = 0;
+	path = ttyname(0);
+	tputs(tgetstr("cl", NULL), 1, ft_putchar_term);
+	ft_do_loop(array, &cursor, ac, path);
 }

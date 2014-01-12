@@ -15,8 +15,9 @@ NAME = ft_select
 CFLAGS = -pedantic -Wall -Werror -Wextra -O3 -g -Wconversion
 
 FILES = main.c ft_control.c ft_keycatch.c ft_termode.c \
-		ft_display.c ft_loop.c ft_esc_input.c\
-		ft_get_line.c
+		ft_display.c ft_loop.c ft_esc_input.c \
+		ft_get_line.c ft_print.c ft_keycatch_2.c ft_display_2.c \
+		ft_display_3.c ft_keycatch_3.c
 
 SRC = $(addprefix src/, $(FILES))
 

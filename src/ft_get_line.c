@@ -28,6 +28,7 @@ static t_line	*ft_init_line(char *line, int vid_rev, int underline, int len)
 	result->vid_rev = vid_rev;
 	result->underline = underline;
 	result->size = len;
+	result->show = 1;
 	return (result);
 }
 

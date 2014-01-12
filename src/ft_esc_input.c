@@ -12,6 +12,7 @@
 
 #include <stdlib.h>
 #include <termcap.h>
+#include <unistd.h>
 #include "header.h"
 
 int	ft_check_del(char *buf)
@@ -31,6 +32,11 @@ int	ft_esc_input(char *buf, t_line **array)
 
 	if (buf[0] == 27 && !buf[1])
 	{
+		if (ft_is_search(0, 0))
+		{
+			ft_is_search(0, 1);
+			return (1);
+		}
 		i = 0;
 		ft_restore();
 		while (array[i])
@@ -39,6 +45,7 @@ int	ft_esc_input(char *buf, t_line **array)
 			i++;
 		}
 		free(array);
+		close(ft_open_call());
 		exit(0);
 	}
 	return (0);
